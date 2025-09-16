@@ -1,8 +1,8 @@
 ﻿{
-  "id": "testmod",
-  "name": "Test Mod",
+  "id": "manngo.testmod2",
+  "name": "Test Mod 2",
   "version": "0.1.0",
-  "authors": "Author",
+  "authors": "Manngo",
   "description": "Put a neat description here",
   "tags": [],
   "requirements": [],
