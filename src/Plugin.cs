@@ -20,7 +20,7 @@ sealed class Plugin : BaseUnityPlugin
     {
         Logger = base.Logger;
         On.RainWorld.OnModsInit += OnModsInit;
-        On.Player.Jump += myFunc;
+        On.BigSpider.Revive += MyFunc;
     }
 
     private void OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
@@ -33,10 +33,17 @@ sealed class Plugin : BaseUnityPlugin
         // Initialize assets, your mod config, and anything that uses RainWorld here
         Logger.LogDebug("Hello world!");
     }
-    public static void MyFunc(On.Player.orig_Jump, Player self)
+    public static void MyFunc(On.BigSpider.orig_Revive orig, BigSpider self)
     {
         orig(self);
-        Logger.LogInfo("Hello World");
-        new Explosion(self.room, self, self.bodyChunks[0].pos, 40, 10.0, 10.0, 10.0, 10.0, 0.0, self, 0.1, 0.0, 0.0);
+        
+        Logger.LogInfo("Boom");
+        self.room.AddObject(new Explosion(this.room, self self.mainBodyChunk.pos, 7, 250f, 6.2f, 2f, 280f, 0.25f, self, 0.7f, 160f, 1f));
+        self.room.AddObject(new Explosion.ExplosionLight(pos, 280f, 1f, 7, new Color(1f, 1f, 1f)))));
+        self.room.AddObject(new Explosion.ExplosionLight(pos, 230f, 1f, 3, new Color(1f, 1f, 1f)));
+        self.room.AddObject(new ExplosionSpikes(room, pos, 14, 30f, 9f, 7f, 170f, new Color(1f, 1f, 1f)))));
+        self.room.AddObject(new ShockWave(pos, 330f, 0.045f, 5, false));
+        self.room.PlaySound(SoundID.Bomb_Explode, self.mainBodyChunk.pos);
+        
     }
 }
