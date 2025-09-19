@@ -10,7 +10,7 @@ using System.Security.Permissions;
 
 namespace TestMod;
 
-[BepInPlugin("com.manngo.testmod2", "Test Mod 2", "0.1.0")]
+[BepInPlugin("com.manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.0")]
 sealed class Plugin : BaseUnityPlugin
 {
     public static new ManualLogSource Logger;

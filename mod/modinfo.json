@@ -1,9 +1,9 @@
 ﻿{
   "id": "manngo.testmod2",
-  "name": "Test Mod 2",
+  "name": "Spiders Explode on Revive",
   "version": "0.1.0",
   "authors": "Manngo",
-  "description": "Put a neat description here",
+  "description": "A Rain World mod that makes spiders explode when revived by other spiders.",
   "tags": [],
   "requirements": [],
   "requirements_names": [],
