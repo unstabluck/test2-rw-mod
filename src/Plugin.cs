@@ -36,12 +36,14 @@ sealed class Plugin : BaseUnityPlugin
     public static void MyFunc(On.BigSpider.orig_Revive orig, BigSpider self)
     {
         orig(self);
+
+        var pos = self.mainBodyChunk.pos;
         
         Logger.LogInfo("Boom");
-        self.room.AddObject(new Explosion(this.room, self self.mainBodyChunk.pos, 7, 250f, 6.2f, 2f, 280f, 0.25f, self, 0.7f, 160f, 1f));
-        self.room.AddObject(new Explosion.ExplosionLight(pos, 280f, 1f, 7, new Color(1f, 1f, 1f)))));
-        self.room.AddObject(new Explosion.ExplosionLight(pos, 230f, 1f, 3, new Color(1f, 1f, 1f)));
-        self.room.AddObject(new ExplosionSpikes(room, pos, 14, 30f, 9f, 7f, 170f, new Color(1f, 1f, 1f)))));
+        self.room.AddObject(new Explosion(self.room, self, pos, 7, 250f, 6.2f, 2f, 280f, 0.25f, self, 0.7f, 160f, 1f));
+        self.room.AddObject(new Explosion.ExplosionLight(pos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
+        self.room.AddObject(new Explosion.ExplosionLight(pos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
+        self.room.AddObject(new ExplosionSpikes(self.room, pos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
         self.room.AddObject(new ShockWave(pos, 330f, 0.045f, 5, false));
         self.room.PlaySound(SoundID.Bomb_Explode, self.mainBodyChunk.pos);
         
