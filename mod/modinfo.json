@@ -1,7 +1,7 @@
 ﻿{
   "id": "manngo.spider_revive_explosion",
   "name": "Spiders Explode on Revive",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "authors": "Manngo",
   "description": "A Rain World mod that makes spiders explode when revived by other spiders.",
   "tags": [],

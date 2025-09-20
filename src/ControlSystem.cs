@@ -11,11 +11,13 @@ using UnityEngine;
 
 namespace TestMod;
 
-[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.3")]
+[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.4")]
 internal class FreeHomingMath
 {
     public BodyChunk target;
     public Room room;
+
+    //Plant Vectors for each Homing Instance 
     public Vector2 lastPos;
     public Vector2 pos;
     public Vector2 lastVel;
@@ -31,9 +33,11 @@ internal class FreeHomingMath
     public Vector2 errorp;
     public Vector2 errori;
     public Vector2 errord;
-    public float kp = 0.05f;
-    public float ki = 0.05f;
-    public float kd = 0.05f;
+    
+    //PID Controller Constants
+    public float kp = 0.005f; //0.005f 
+    public float ki = 0.05f; //0.05f
+    public float kd = 0.0005f; //0.0005f
 
     public FreeHomingMath(BodyChunk target, Vector2 pos, Room room) { 
         this.target = target;
@@ -56,25 +60,27 @@ internal class FreeHomingMath
 
     public void Update()
     {
+        //Find Error Vectors
         errorp = new Vector2(vel.x - targetVel.x, vel.y - targetVel.y);
         errori = new Vector2(pos.x - targetPos.x, pos.y - targetPos.y);
         errord = new Vector2(accel.x - targetAccel.x, accel.y - targetAccel.y);
 
+        //Find Derivatives of Position
         vel = new Vector2(pos.x -lastPos.x, pos.y - lastPos.y);
         targetVel = new Vector2(targetPos.x - targetLastPos.x, targetPos.y - targetLastPos.y);
         accel = new Vector2(vel.x - lastVel.x, vel.y - lastVel.y);
         targetAccel = new Vector2(targetVel.x - targetLastVel.x, targetVel.y - targetLastVel.y);
         
 
-
+        //Last = Now 
         lastPos = pos;
         lastVel = vel;
         lastAccel = accel;
         targetLastPos = targetPos;
         targetLastVel = targetVel;
         targetLastAccel = targetAccel;
-        //TODO add math and explosions 
-
+        
+        //Kinematics Update
         accel = accel - (errord * kd);
         vel = vel - (errorp * kp) + accel;
         pos = pos - (errori * ki) + vel;
