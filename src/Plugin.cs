@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace TestMod;
 
-[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.0")]
+[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.1")]
 sealed class Plugin : BaseUnityPlugin
 {
     public static new ManualLogSource Logger;
@@ -65,14 +65,14 @@ sealed class Plugin : BaseUnityPlugin
             Vector2 boomPos = boomFlies[i].pos;
             Room room = boomFlies[i].room;
             Player owner = boomFlies[i].room.PlayersInRoom[0];
-
-            Logger.LogInfo("("boomPos.x+", "+boomPos.y+")");
-            self.room.AddObject(new Explosion(room, owner, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, owner, 0.7f, 160f, 1f));
-            self.room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
-            self.room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
-            self.room.AddObject(new ExplosionSpikes(room, boomPos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
-            self.room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
-            self.room.PlaySound(SoundID.Bomb_Explode, boomPos);
+            
+            Logger.LogInfo(boomPos);
+            room.AddObject(new Explosion(room, owner, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, owner, 0.7f, 160f, 1f));
+            room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
+            room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
+            room.AddObject(new ExplosionSpikes(room, boomPos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
+            room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
+            room.PlaySound(SoundID.Bomb_Explode, boomPos);
 
 
         }

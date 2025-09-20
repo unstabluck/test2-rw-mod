@@ -31,9 +31,9 @@ internal class FreeHomingMath
     public Vector2 errorp;
     public Vector2 errori;
     public Vector2 errord;
-    public double kp = 0.05;
-    public double ki = 0.05;
-    public double kd = 0.05;
+    public float kp = 0.05f;
+    public float ki = 0.05f;
+    public float kd = 0.05f;
 
     public FreeHomingMath(BodyChunk target, Vector2 pos, Room room) { 
         this.target = target;
