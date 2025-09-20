@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace TestMod;
 
-[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.1")]
+[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.2")]
 sealed class Plugin : BaseUnityPlugin
 {
     public static new ManualLogSource Logger;
