@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace TestMod;
 
-[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.2")]
+[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.3")]
 internal class FreeHomingMath
 {
     public BodyChunk target;
@@ -75,9 +75,9 @@ internal class FreeHomingMath
         targetLastAccel = targetAccel;
         //TODO add math and explosions 
 
-        pos = pos - (errori * ki);
-        vel = vel - (errorp * kp);
         accel = accel - (errord * kd);
+        vel = vel - (errorp * kp) + accel;
+        pos = pos - (errori * ki) + vel;
     }
 
     
