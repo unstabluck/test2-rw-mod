@@ -75,9 +75,9 @@ internal class FreeHomingMath
         targetLastAccel = targetAccel;
         //TODO add math and explosions 
 
-        pos = pos + (errori * ki);
-        vel = vel + (errorp * kp);
-        accel = accel + (errord * kd);
+        pos = pos - (errori * ki);
+        vel = vel - (errorp * kp);
+        accel = accel - (errord * kd);
     }
 
     

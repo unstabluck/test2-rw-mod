@@ -67,6 +67,8 @@ sealed class Plugin : BaseUnityPlugin
             Player owner = boomFlies[i].room.PlayersInRoom[0];
             
             Logger.LogInfo(boomPos);
+            Logger.LogInfo("Integral Error: ")
+            Logger.LogInfo(boomFlies[i].errori);
             room.AddObject(new Explosion(room, owner, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, owner, 0.7f, 160f, 1f));
             room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
             room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
