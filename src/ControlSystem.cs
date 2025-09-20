@@ -16,6 +16,7 @@ internal class FreeHomingMath
 {
     public BodyChunk target;
     public Room room;
+    public float timer = 0f;
 
     //Plant Vectors for each Homing Instance 
     public Vector2 lastPos;
@@ -35,9 +36,9 @@ internal class FreeHomingMath
     public Vector2 errord;
     
     //PID Controller Constants
-    public float kp = 1.0f; //0.005f 
-    public float ki = 1.0f; //0.0005f
-    public float kd = 1.0f; //0.0005f
+    public float kp = 0.05f; //0.05f 
+    public float ki = 0.01f; //0.05f
+    public float kd = 0.05f; //0.05f
 
     public FreeHomingMath(BodyChunk target, Vector2 pos, Room room) { 
         this.target = target;
@@ -65,6 +66,7 @@ internal class FreeHomingMath
         errori = new Vector2(pos.x - targetPos.x, pos.y - targetPos.y);
         errord = new Vector2(accel.x - targetAccel.x, accel.y - targetAccel.y);
 
+        
         //Find Derivatives of Position
         vel = new Vector2(pos.x -lastPos.x, pos.y - lastPos.y);
         targetVel = new Vector2(targetPos.x - targetLastPos.x, targetPos.y - targetLastPos.y);

@@ -3,6 +3,7 @@ using BepInEx.Logging;
 using MonoMod;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Security.Permissions;
 using UnityEngine;
 
@@ -19,10 +20,12 @@ sealed class Plugin : BaseUnityPlugin
     public static new ManualLogSource Logger;
     bool IsInit;
     public List<FreeHomingMath> boomFlies = new List<FreeHomingMath>();
+    public Stopwatch stopwatch;
 
     public void OnEnable()
     {
         Logger = base.Logger;
+        stopwatch = new Stopwatch();
         On.RainWorld.OnModsInit += OnModsInit;
 
         //New Hooks
@@ -69,29 +72,37 @@ sealed class Plugin : BaseUnityPlugin
     public void MyUpdateFunc(On.RainWorldGame.orig_Update orig, RainWorldGame self)
     {
         orig(self);
-
         //for each existing homing explosion, update
         for (int i = 0; i < this.boomFlies.Count; i++)
         {
-            Logger.LogInfo("inside update-for boomflies loop\n\n");
+            
             boomFlies[i].Update();
             Vector2 boomPos = boomFlies[i].pos;
             Room room = boomFlies[i].room;
             Player owner = boomFlies[i].room.PlayersInRoom[0];
 
             //Log Info for Debugging
-            if (boomFlies[i].targetVel.magnitude > 0)
+            if (boomFlies[i].targetVel.magnitude > 0 | true)
             {
                 Logger.LogInfo("Position: ");
                 Logger.LogInfo(boomPos);
-                Logger.LogInfo("Integral Error: ");
+                Logger.LogInfo("Target position: ");
+                Logger.LogInfo(boomFlies[i].targetPos);
+                Logger.LogInfo("Position Error: ");
                 Logger.LogInfo(boomFlies[i].errori);
                 Logger.LogInfo("Velocity: ");
                 Logger.LogInfo(boomFlies[i].vel);
                 Logger.LogInfo("Target Velocity: ");
                 Logger.LogInfo(boomFlies[i].targetVel);
-                Logger.LogInfo("Target position: ");
-                Logger.LogInfo(boomFlies[i].targetPos);
+                Logger.LogInfo("Velocity Error: ");
+                Logger.LogInfo(boomFlies[i].errorp);
+                Logger.LogInfo("Accel: ");
+                Logger.LogInfo(boomFlies[i].accel);
+                Logger.LogInfo("Target Accel: ");
+                Logger.LogInfo(boomFlies[i].targetAccel);
+                Logger.LogInfo("Accel Error: ");
+                Logger.LogInfo(boomFlies[i].errord);
+
             }
             
 
