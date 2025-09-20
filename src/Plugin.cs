@@ -115,7 +115,7 @@ sealed class Plugin : BaseUnityPlugin
             room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
             room.PlaySound(SoundID.Bomb_Explode, boomPos);
             //Update position of target
-            boomFlies[i].pos = owner.mainBodyChunk.pos;
+            boomFlies[i].targetPos = owner.mainBodyChunk.pos;
 
 
         }
