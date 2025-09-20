@@ -35,9 +35,9 @@ internal class FreeHomingMath
     public Vector2 errord;
     
     //PID Controller Constants
-    public float kp = 0.005f; //0.005f 
-    public float ki = 0.05f; //0.05f
-    public float kd = 0.0005f; //0.0005f
+    public float kp = 1.0f; //0.005f 
+    public float ki = 1.0f; //0.0005f
+    public float kd = 1.0f; //0.0005f
 
     public FreeHomingMath(BodyChunk target, Vector2 pos, Room room) { 
         this.target = target;

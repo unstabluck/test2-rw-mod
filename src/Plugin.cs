@@ -80,16 +80,20 @@ sealed class Plugin : BaseUnityPlugin
             Player owner = boomFlies[i].room.PlayersInRoom[0];
 
             //Log Info for Debugging
-            Logger.LogInfo("Position: ");
-            Logger.LogInfo(boomPos);
-            Logger.LogInfo("Integral Error: ");
-            Logger.LogInfo(boomFlies[i].errori);
-            Logger.LogInfo("Velocity: ");
-            Logger.LogInfo(boomFlies[i].vel);
-            Logger.LogInfo("Target Velocity: ");
-            Logger.LogInfo(boomFlies[i].targetVel);
-            Logger.LogInfo("Target position: ");
-            Logger.LogInfo(boomFlies[i].targetPos);
+            if (boomFlies[i].targetVel.magnitude > 0)
+            {
+                Logger.LogInfo("Position: ");
+                Logger.LogInfo(boomPos);
+                Logger.LogInfo("Integral Error: ");
+                Logger.LogInfo(boomFlies[i].errori);
+                Logger.LogInfo("Velocity: ");
+                Logger.LogInfo(boomFlies[i].vel);
+                Logger.LogInfo("Target Velocity: ");
+                Logger.LogInfo(boomFlies[i].targetVel);
+                Logger.LogInfo("Target position: ");
+                Logger.LogInfo(boomFlies[i].targetPos);
+            }
+            
 
 
             //Explosions
