@@ -72,53 +72,71 @@ sealed class Plugin : BaseUnityPlugin
     public void MyUpdateFunc(On.Room.orig_Update orig, Room self)
     {
         orig(self);
-        //for each existing homing explosion, update
-        for (int i = 0; i < this.boomFlies.Count; i++)
+        if (boomFlies.Count > 0)
         {
-            
-            boomFlies[i].Update();
-            Vector2 boomPos = boomFlies[i].pos;
-            Room room = boomFlies[i].room;
-            Player owner = boomFlies[i].room.PlayersInRoom[0];
-
-            //Log Info for Debugging
-            if (boomFlies[i].targetVel.magnitude > 0 | true)
+            stopwatch.Start();
+        }  
+        if(stopwatch.ElapsedMilliseconds >= 25)
+        {
+            //update each existing homing explosion every half second.
+            for (int i = 0; i < this.boomFlies.Count; i++)
             {
-                Logger.LogInfo("Position: ");
-                Logger.LogInfo(boomPos);
-                Logger.LogInfo("Target position: ");
-                Logger.LogInfo(boomFlies[i].targetPos);
-                Logger.LogInfo("Position Error: ");
-                Logger.LogInfo(boomFlies[i].errori);
-                Logger.LogInfo("Velocity: ");
-                Logger.LogInfo(boomFlies[i].vel);
-                Logger.LogInfo("Target Velocity: ");
-                Logger.LogInfo(boomFlies[i].targetVel);
-                Logger.LogInfo("Velocity Error: ");
-                Logger.LogInfo(boomFlies[i].errorp);
-                Logger.LogInfo("Accel: ");
-                Logger.LogInfo(boomFlies[i].accel);
-                Logger.LogInfo("Integrated Error: ");
-                Logger.LogInfo(boomFlies[i].errori);
-                Logger.LogInfo("Ki contribution: ");
-                Logger.LogInfo(boomFlies[i].errori * boomFlies[i].ki);
+                Logger.LogDebug("Milliseconds passed: ")
+                Logger.LogDebug(stopwatch.ElapsedMilliseconds);
+                
+                Vector2 boomPos = boomFlies[i].pos;
+                Room room = boomFlies[i].room;
+                Player owner = boomFlies[i].room.PlayersInRoom[0];
+
+                //Log Info for Debugging
+
+                Logger.LogDebug("Position: ");
+                Logger.LogDebug(boomPos);
+                Logger.LogDebug("Target position: ");
+                Logger.LogDebug(boomFlies[i].targetPos);
+                Logger.LogDebug("Position Error: ");
+                Logger.LogDebug(boomFlies[i].errorp);
+                /*
+                Logger.LogDebug("Velocity: ");
+                Logger.LogDebug(boomFlies[i].vel);
+                Logger.LogDebug("Target Velocity: ");
+                Logger.LogDebug(boomFlies[i].targetVel);
+                Logger.LogDebug("Derivative Error: ");
+                Logger.LogDebug(boomFlies[i].errord);
+                */
+                Logger.LogDebug("Accel: ");
+                Logger.LogDebug(boomFlies[i].accel);
+                /*
+                Logger.LogDebug("Integrated Error: ");
+                Logger.LogDebug(boomFlies[i].errori);
+                Logger.LogDebug("Ki contribution: ");
+                Logger.LogDebug(boomFlies[i].errori * boomFlies[i].ki);
+                */
+                
+
+
+
+                //Explosions
+                //room.AddObject(new Explosion(room, owner, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, owner, 0.7f, 160f, 1f));
+                room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
+                room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
+                room.AddObject(new ExplosionSpikes(room, boomPos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
+                room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
+                //room.PlaySound(SoundID.Bomb_Explode, boomPos);
+
+                //Update
+                boomFlies[i].Update(stopwatch.ElapsedMilliseconds);
+                //Update position of target
+                boomFlies[i].targetPos = owner.mainBodyChunk.pos;
+
+
 
             }
-            
-
-
-            //Explosions
-            //room.AddObject(new Explosion(room, owner, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, owner, 0.7f, 160f, 1f));
-            room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
-            room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
-            room.AddObject(new ExplosionSpikes(room, boomPos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
-            room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
-            room.PlaySound(SoundID.Bomb_Explode, boomPos);
-            //Update position of target
-            boomFlies[i].targetPos = owner.mainBodyChunk.pos;
-
-
+            stopwatch.Stop();
+            stopwatch.Restart();
         }
+        
+        
     }
     
 }

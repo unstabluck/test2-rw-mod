@@ -34,12 +34,13 @@ internal class FreeHomingMath
     public Vector2 errorp;
     public Vector2 errori;
     public Vector2 errord;
+    public Vector2 lastErrorp;
 
     
     //PID Controller Constants
-    public float kp = 0.005f; //0.05f 
-    public float ki = 0.5f; //0.05f
-    public float kd = 0.5f; //0.05f
+    public float kp = 0.5f; //0.5f 
+    public float ki = 0.5f; //0.5f
+    public float kd = 0.05f; //0.05f
 
     public FreeHomingMath(BodyChunk target, Vector2 pos, Room room) { 
         this.target = target;
@@ -52,6 +53,7 @@ internal class FreeHomingMath
         this.lastAccel = Vector2.zeroVector;
         targetLastVel = Vector2.zeroVector;
         targetLastAccel = Vector2.zeroVector;
+        lastErrorp = Vector2.zeroVector;
 
         targetVel = Vector2.zeroVector;
         targetAccel = Vector2.zeroVector;
@@ -61,19 +63,22 @@ internal class FreeHomingMath
 
     }
 
-    public void Update()
+    public void Update(float delta)
     {
+        //dt in seconds 
+        float dt = delta / 1000f;
         //Find Error Vectors
-        errord = new Vector2( targetVel.x - vel.x, targetVel.y - vel.y);
-        errorp = new Vector2( targetPos.x - pos.x, targetPos.y - pos.y);
-        errori += errorp;
-
         
+        errorp = new Vector2( targetPos.x - pos.x, targetPos.y - pos.y);
+        errori += errorp*dt;
+        errord = new Vector2((errorp.x - lastErrorp.x)/dt, (errorp.y - lastErrorp.y)/dt);
+
+
         //Find Derivatives of Position
-        vel = new Vector2(pos.x -lastPos.x, pos.y - lastPos.y);
-        targetVel = new Vector2(targetPos.x - targetLastPos.x, targetPos.y - targetLastPos.y);
-        accel = new Vector2(vel.x - lastVel.x, vel.y - lastVel.y);
-        targetAccel = new Vector2(targetVel.x - targetLastVel.x, targetVel.y - targetLastVel.y);
+        vel = new Vector2((pos.x -lastPos.x)/dt, (pos.y - lastPos.y)/dt);
+        targetVel = new Vector2((targetPos.x - targetLastPos.x)/dt, (targetPos.y - targetLastPos.y)/dt);
+        accel = new Vector2((vel.x - lastVel.x)/dt, (vel.y - lastVel.y)/dt);
+        targetAccel = new Vector2((targetVel.x - targetLastVel.x)/dt, (targetVel.y - targetLastVel.y)/dt);
         
 
         //Last = Now 
@@ -83,11 +88,12 @@ internal class FreeHomingMath
         targetLastPos = targetPos;
         targetLastVel = targetVel;
         targetLastAccel = targetAccel;
+        lastErrorp = errorp;
         
         //Kinematics Update
-        accel = accel + (errorp * kp) + (errori * ki) + (errord * kd);
-        vel = vel  + accel;
-        pos = pos  + vel;
+        accel = (errorp * kp) + (errori * ki) + (errord * kd);
+        vel = vel + accel*dt;
+        pos = pos + vel*dt;
     }
 
     
