@@ -34,7 +34,7 @@ sealed class Plugin : BaseUnityPlugin
         On.BigSpider.Revive += MyReviveFunc;
 
         //Frame by Frame Update
-        On.RainWorldGame.Update += MyUpdateFunc;
+        On.Room.Update += MyUpdateFunc;
     }
 
     private void OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
@@ -69,7 +69,7 @@ sealed class Plugin : BaseUnityPlugin
         
     }
 
-    public void MyUpdateFunc(On.RainWorldGame.orig_Update orig, RainWorldGame self)
+    public void MyUpdateFunc(On.Room.orig_Update orig, Room self)
     {
         orig(self);
         //for each existing homing explosion, update
@@ -98,10 +98,10 @@ sealed class Plugin : BaseUnityPlugin
                 Logger.LogInfo(boomFlies[i].errorp);
                 Logger.LogInfo("Accel: ");
                 Logger.LogInfo(boomFlies[i].accel);
-                Logger.LogInfo("Target Accel: ");
-                Logger.LogInfo(boomFlies[i].targetAccel);
-                Logger.LogInfo("Accel Error: ");
-                Logger.LogInfo(boomFlies[i].errord);
+                Logger.LogInfo("Integrated Error: ");
+                Logger.LogInfo(boomFlies[i].errori);
+                Logger.LogInfo("Ki contribution: ");
+                Logger.LogInfo(boomFlies[i].errori * boomFlies[i].ki);
 
             }
             

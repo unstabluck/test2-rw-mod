@@ -37,9 +37,9 @@ internal class FreeHomingMath
 
     
     //PID Controller Constants
-    public float kp = 0.0000000005f; //0.05f 
-    public float ki = 0.0000000005f; //0.05f
-    public float kd = 0.0000000005f; //0.05f
+    public float kp = 0.005f; //0.05f 
+    public float ki = 0.5f; //0.05f
+    public float kd = 0.0f; //0.05f
 
     public FreeHomingMath(BodyChunk target, Vector2 pos, Room room) { 
         this.target = target;
@@ -64,8 +64,8 @@ internal class FreeHomingMath
     public void Update()
     {
         //Find Error Vectors
-        errord = new Vector2(vel.x - targetVel.x, vel.y - targetVel.y);
-        errorp = new Vector2(pos.x - targetPos.x, pos.y - targetPos.y);
+        errord = new Vector2( targetVel.x - vel.x, targetVel.y - vel.y);
+        errorp = new Vector2( targetPos.x - pos.x, targetPos.y - pos.y);
         errori += errorp;
 
         
@@ -85,7 +85,7 @@ internal class FreeHomingMath
         targetLastAccel = targetAccel;
         
         //Kinematics Update
-        accel = accel - (errorp * kp) - (errori * ki) - (errord * kd);
+        accel = accel + (errorp * kp) + (errori * ki) + (errord * kd);
         vel = vel  + accel;
         pos = pos  + vel;
     }
