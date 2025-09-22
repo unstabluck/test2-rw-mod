@@ -21,11 +21,14 @@ sealed class Plugin : BaseUnityPlugin
     bool IsInit;
     public List<FreeHomingMath> boomFlies = new List<FreeHomingMath>();
     public Stopwatch stopwatch;
+    public Stopwatch stopwatch2;
+    public Creature explosionSource;
 
     public void OnEnable()
     {
         Logger = base.Logger;
         stopwatch = new Stopwatch();
+        stopwatch2 = new Stopwatch();
         On.RainWorld.OnModsInit += OnModsInit;
 
         //New Hooks
@@ -66,6 +69,7 @@ sealed class Plugin : BaseUnityPlugin
         self.room.PlaySound(SoundID.Bomb_Explode, self.mainBodyChunk.pos);
         //Add a new homing explosion
         this.boomFlies.Add(new FreeHomingMath(self.room.PlayersInRoom[0].mainBodyChunk, pos, self.room) );
+        this.explosionSource = self.revivingBuddy;
         
     }
 
@@ -75,18 +79,20 @@ sealed class Plugin : BaseUnityPlugin
         if (boomFlies.Count > 0)
         {
             stopwatch.Start();
+            stopwatch2.Start();
         }  
         if(stopwatch.ElapsedMilliseconds >= 25)
         {
-            //update each existing homing explosion every half second.
+            //update each existing homing explosion every 1/40 second.
             for (int i = 0; i < this.boomFlies.Count; i++)
             {
-                Logger.LogDebug("Milliseconds passed: ")
+                Logger.LogDebug("Milliseconds passed: ");
                 Logger.LogDebug(stopwatch.ElapsedMilliseconds);
                 
                 Vector2 boomPos = boomFlies[i].pos;
                 Room room = boomFlies[i].room;
                 Player owner = boomFlies[i].room.PlayersInRoom[0];
+
 
                 //Log Info for Debugging
 
@@ -95,7 +101,7 @@ sealed class Plugin : BaseUnityPlugin
                 Logger.LogDebug("Target position: ");
                 Logger.LogDebug(boomFlies[i].targetPos);
                 Logger.LogDebug("Position Error: ");
-                Logger.LogDebug(boomFlies[i].errorp);
+                Logger.LogDebug(boomFlies[i].errorp.magnitude);
                 /*
                 Logger.LogDebug("Velocity: ");
                 Logger.LogDebug(boomFlies[i].vel);
@@ -105,7 +111,7 @@ sealed class Plugin : BaseUnityPlugin
                 Logger.LogDebug(boomFlies[i].errord);
                 */
                 Logger.LogDebug("Accel: ");
-                Logger.LogDebug(boomFlies[i].accel);
+                Logger.LogDebug(boomFlies[i].accel.magnitude);
                 /*
                 Logger.LogDebug("Integrated Error: ");
                 Logger.LogDebug(boomFlies[i].errori);
@@ -117,12 +123,19 @@ sealed class Plugin : BaseUnityPlugin
 
 
                 //Explosions
-                //room.AddObject(new Explosion(room, owner, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, owner, 0.7f, 160f, 1f));
-                room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
-                room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
-                room.AddObject(new ExplosionSpikes(room, boomPos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
-                room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
-                //room.PlaySound(SoundID.Bomb_Explode, boomPos);
+                if(stopwatch2.ElapsedMilliseconds >= 500)
+                {
+                    room.PlaySound(SoundID.Bomb_Explode, boomPos);
+                    room.AddObject(new Explosion(room, explosionSource, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, explosionSource, 1f, 160f, 1f));
+                    room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
+                    room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
+                    room.AddObject(new ExplosionSpikes(room, boomPos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
+                    room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
+                    stopwatch2.Restart();
+
+                }
+                room.AddObject(new ExplosionSpikes(room, boomPos, 3, 30f, 10f, 7f, 100f, new UnityEngine.Color(.3f,.2f, .1f)));
+                
 
                 //Update
                 boomFlies[i].Update(stopwatch.ElapsedMilliseconds);
@@ -134,6 +147,7 @@ sealed class Plugin : BaseUnityPlugin
             }
             stopwatch.Stop();
             stopwatch.Restart();
+            
         }
         
         
