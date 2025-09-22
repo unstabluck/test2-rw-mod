@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace TestMod;
 
-[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.4")]
+[BepInPlugin("manngo.spider_revive_explosion", "Spiders Explode on Revive", "0.1.5")]
 sealed class Plugin : BaseUnityPlugin
 {
     public static new ManualLogSource Logger;
@@ -37,7 +37,7 @@ sealed class Plugin : BaseUnityPlugin
         On.BigSpider.Revive += MyReviveFunc;
 
         //Frame by Frame Update
-        On.Room.Update += MyUpdateFunc;
+        On.Player.Update += MyUpdateFunc;
     }
 
     private void OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
@@ -70,17 +70,16 @@ sealed class Plugin : BaseUnityPlugin
         //Add a new homing explosion
         this.boomFlies.Add(new FreeHomingMath(self.room.PlayersInRoom[0].mainBodyChunk, pos, self.room) );
         this.explosionSource = self.revivingBuddy;
+        stopwatch.Start();
+        stopwatch2.Start();
+
         
     }
 
-    public void MyUpdateFunc(On.Room.orig_Update orig, Room self)
+    public void MyUpdateFunc(On.Player.orig_Update orig, Player self, bool eu)
     {
-        orig(self);
-        if (boomFlies.Count > 0)
-        {
-            stopwatch.Start();
-            stopwatch2.Start();
-        }  
+        orig(self, eu);
+       
         if(stopwatch.ElapsedMilliseconds >= 25)
         {
             //update each existing homing explosion every 1/40 second.
@@ -125,13 +124,15 @@ sealed class Plugin : BaseUnityPlugin
                 //Explosions
                 if(stopwatch2.ElapsedMilliseconds >= 500)
                 {
-                    room.PlaySound(SoundID.Bomb_Explode, boomPos);
+                    Logger.LogDebug("Tracking Explosion");
+                    stopwatch2.Restart();
                     room.AddObject(new Explosion(room, explosionSource, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, explosionSource, 1f, 160f, 1f));
+                    room.PlaySound(SoundID.Bomb_Explode, boomPos);
                     room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
                     room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
                     room.AddObject(new ExplosionSpikes(room, boomPos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
                     room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
-                    stopwatch2.Restart();
+                    
 
                 }
                 room.AddObject(new ExplosionSpikes(room, boomPos, 3, 30f, 10f, 7f, 100f, new UnityEngine.Color(.3f,.2f, .1f)));
