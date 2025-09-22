@@ -24,6 +24,7 @@ sealed class Plugin : BaseUnityPlugin
     public Stopwatch stopwatch2;
     public Creature explosionSource;
 
+
     public void OnEnable()
     {
         Logger = base.Logger;
@@ -89,7 +90,6 @@ sealed class Plugin : BaseUnityPlugin
                 Logger.LogDebug(stopwatch.ElapsedMilliseconds);
                 
                 Vector2 boomPos = boomFlies[i].pos;
-                Room room = boomFlies[i].room;
                 Player owner = boomFlies[i].room.PlayersInRoom[0];
 
 
@@ -126,16 +126,16 @@ sealed class Plugin : BaseUnityPlugin
                 {
                     Logger.LogDebug("Tracking Explosion");
                     stopwatch2.Restart();
-                    room.AddObject(new Explosion(room, explosionSource, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, explosionSource, 1f, 160f, 1f));
-                    room.PlaySound(SoundID.Bomb_Explode, boomPos);
-                    room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, new UnityEngine.Color(1f, 1f, 1f)));
-                    room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, new UnityEngine.Color(1f, 1f, 1f)));
-                    room.AddObject(new ExplosionSpikes(room, boomPos, 14, 30f, 9f, 7f, 170f, new UnityEngine.Color(1f, 1f, 1f)));
-                    room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
+                    boomFlies[i].room.AddObject(new Explosion(boomFlies[i].room, explosionSource, boomPos, 7, 250f, 6.2f, 2f, 280f, 0.25f, explosionSource, 1f, 160f, 1f));
+                    boomFlies[i].room.PlaySound(SoundID.Bomb_Explode, boomPos);
+                    boomFlies[i].room.AddObject(new Explosion.ExplosionLight(boomPos, 280f, 1f, 7, Color.white));
+                    boomFlies[i].room.AddObject(new Explosion.ExplosionLight(boomPos, 230f, 1f, 3, Color.white));
+                    boomFlies[i].room.AddObject(new ExplosionSpikes(boomFlies[i].room, boomPos, 14, 30f, 9f, 7f, 170f, Color.white));
+                    boomFlies[i].room.AddObject(new ShockWave(boomPos, 330f, 0.045f, 5, false));
                     
 
                 }
-                room.AddObject(new ExplosionSpikes(room, boomPos, 3, 30f, 10f, 7f, 100f, new UnityEngine.Color(.3f,.2f, .1f)));
+                boomFlies[i].room.AddObject(new ExplosionSpikes(boomFlies[i].room, boomPos, 3, 30f, 10f, 20f, 80f, Color.black));
                 
 
                 //Update
